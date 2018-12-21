@@ -9,6 +9,26 @@ from pylab import *
 from matplotlib.ticker import MultipleLocator, FormatStrFormatter
 from scipy import interpolate
 
+def RLSfilter(U,V,rate):
+    # filtering
+    n = 20  # length of filter
+    Udelay = pa.input_from_history(U, n)[:-1]
+
+    Vdelay = V[n - 1:-1]
+    f = pa.filters.FilterRLS(mu=0.99, n=n)
+    y, e, w = f.run(Vdelay, Udelay)
+    music = e.astype(np.int16)
+    music = music[44100:]
+    mmax = np.max(music)
+    print(mmax)
+    music = music * 32768 // mmax
+    print(np.max(music))
+    music = music.astype(np.int16)
+    UU = U.astype(np.int16)
+    VV = V.astype(np.int16)
+    wavfile.write('ex8U.wav', rate, UU)
+    wavfile.write('ex8V.wav', rate, VV)
+
 def boundary(array):
     for i in array:
         if i > 32768:
