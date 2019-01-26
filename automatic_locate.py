@@ -8,6 +8,51 @@ from scipy.io import wavfile
 import numpy as np
 import padasip as pa
 import ANCfunc as anc
+from scipy import interpolate
+import pylab as pl
+from pylab import *
+
+class AutoTimeDelayEstimation(object):
+    def __init__(self, orate, u, v):
+        self.rate = orate
+        self.u = u
+        self.v = v
+
+    # def phase_shift(self,signal, phase):
+    def phase_shift(self, phase):
+        assert 0 <= phase <= 1
+        x = np.arange(0, len(self.u))
+        y = np.array(self.u)
+        f = interpolate.interp1d(x, y)
+        xnew = np.arange(phase, len(self.u) - 1, 1)
+        self.u = f(xnew)
+
+    def find_localmin_ref(self, ref):
+        assert 20 <= ref <= 100
+        min_result = (0, math.inf)
+        for align in range(ref-20, ref+20):
+            su = self.u[:-align]
+            sv = self.v[align:]
+            value_ave = np.average(np.abs(su - sv))
+            # value_max = np.max(np.abs(su_-sv_))
+            # value = min(value_ave,value_max)
+            if value_ave < min_result[1]:
+                min_result = (align, value_ave)
+        return min_result
+    def globalmin(self, ref):
+        final_result = (0, math.inf)
+        for i in range(8):
+            phase = i * 0.125
+            self.phase_shift(phase)
+            minresult = self.find_localmin_ref(ref)
+
+            if minresult[1] < final_result[1]:
+                final_result = minresult
+        return final_result
+
+class ManualTimeDelayEstimation(object):
+    pass
+
 
 name = "830"
 

@@ -5,6 +5,9 @@ from scipy import interpolate
 import pylab as pl
 
 x = np.linspace(0, 10, 11)
+print(type(x))
+m = np.arange(8)
+print(type(m))
 # x=[  0.   1.   2.   3.   4.   5.   6.   7.   8.   9.  10.]
 y = np.sin(x)
 xnew = np.linspace(0, 10, 101)
