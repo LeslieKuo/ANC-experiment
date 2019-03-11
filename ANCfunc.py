@@ -187,7 +187,7 @@ def test_changeAmplitude(u,v,key):
 
 
 def plotfft(wave_data,framerate,title,maxY = 10000):#maxY=20000
-    N = 44100
+    N = len(wave_data)
     start = 0  # 开始采样位置
     df = framerate / (N - 1)  # 分辨率
     freq = [df * n for n in range(0, N)]  # N个元素
@@ -263,7 +263,7 @@ def plotfft2w(wave_data,framerate,title,maxY = 2000):#maxY=20000
 
 def plotfft2(wave_data,framerate,title,maxY = 1000):
     # 采样点数，修改采样点数和起始位置进行不同位置和长度的音频波形分析
-    N = 44100
+    N = len(wave_data)
     start = 0  # 开始采样位置
     df = framerate / (N - 1)  # 分辨率
     freq = [df * n for n in range(0, N)]  # N个元素
