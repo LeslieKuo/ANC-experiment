@@ -138,7 +138,7 @@ def mergeChannel(u,v,rate,str="ex10merge.wav"):
     m = list(zip(left,right))
     m = np.array(m)
     # print(type(m))
-    wavfile.write("./output/"+str, rate, m)
+    wavfile.write("./March_output/"+str, rate, m)
     return m.dtype
 def splitChannel(srcMusicFile,str):
     #read
@@ -331,8 +331,8 @@ def phase_shift(signal,phase):
 
 
 #825test
-
-def test(su,sv,testnum):
+# amplitude subtract operation to see the align result
+def amplitude_subtract(su,sv,testnum):
     # #以下是肉眼
     su_ = su[:-testnum]
     sv_ = sv[testnum:]
