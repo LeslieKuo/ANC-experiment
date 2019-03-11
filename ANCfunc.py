@@ -153,25 +153,37 @@ def splitChannel(srcMusicFile,str):
     splitu, splitv = splitu.astype(np.int16), splitv.astype(np.int16)
     # return splitu, -splitv, sampleRate
     return splitu, splitv, sampleRate
-def changeAmplitude(u,v):
-    # max_value = max(np.max(u), np.max(v))
-    # ukey, vkey = max_value/np.max(u), max_value/np.max(v)*1.1
-    max_value = max(np.average(np.abs(u)),np.average(np.abs(v)))
-    ukey, vkey = max_value / np.average(np.abs(u)), max_value / np.average(np.abs(v))
-    au, av = u * ukey, v * vkey
-    au, av = au.astype(np.int16), av.astype(np.int16)
-    key = 0
-    str = "nothing"
-    if ukey >1:
-        key = ukey
-        str = "amplify U"
-        print(str)
-    elif vkey >1:
-        key = vkey
-        str = "amplify V"
-        print(str)
-    print("changeAmlitude key is ",key)
-    return au,av,key
+# def changeAmplitude(u,v):
+#     # max_value = max(np.max(u), np.max(v))
+#     # ukey, vkey = max_value/np.max(u), max_value/np.max(v)*1.1
+#     max_value = max(np.average(np.abs(u)),np.average(np.abs(v)))
+#     ukey, vkey = max_value / np.average(np.abs(u)), max_value / np.average(np.abs(v))
+#     au, av = u * ukey, v * vkey
+#     au, av = au.astype(np.int16), av.astype(np.int16)
+#     key = 0
+#     str = "nothing"
+#     if ukey >1:
+#         key = ukey
+#         str = "amplify U"
+#         print(str)
+#     elif vkey >1:
+#         key = vkey
+#         str = "amplify V"
+#         print(str)
+#     print("changeAmlitude key is ",key)
+#     return au,av,key
+
+def get_key_of_amplitude(u,v):
+
+    max_value = np.average(np.abs(u))
+    key = max_value / np.average(np.abs(v))
+    return key
+
+def test_changeAmplitude(u,v,key):
+
+    av = v * key
+    av,au = av.astype(np.int16),u.astype(np.int16)
+    return au,av
 
 
 def plotfft(wave_data,framerate,title,maxY = 10000):#maxY=20000
@@ -332,7 +344,7 @@ def phase_shift(signal,phase):
 
 #825test
 # amplitude subtract operation to see the align result
-def amplitude_subtract(su,sv,testnum):
+def align_timeline(su,sv,testnum):
     # #以下是肉眼
     su_ = su[:-testnum]
     sv_ = sv[testnum:]
@@ -353,11 +365,7 @@ def test_interpolate_wav(signal,phase):
     return ynew
     # wavfile.write("./output/8.24/"+str+ '824testinterpolate_result.wav', orate, ynew)
 
-def test_changeAmplitude(u,v,key):
 
-    av = v * key
-    av,au = av.astype(np.int16),u.astype(np.int16)
-    return au,av
 
 def subtract(u,v,key):
     result = v - u
